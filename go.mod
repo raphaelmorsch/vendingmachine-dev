@@ -6,7 +6,6 @@ require (
 	github.com/Nerzal/gocloak/v8 v8.6.0
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/go-openapi/runtime v0.23.3
-	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.8.0
 	github.com/stretchr/testify v1.7.0
 	github.com/xgfone/cast v0.5.1

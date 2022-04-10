@@ -4,48 +4,121 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"vendingmachine/src/config"
 	"vendingmachine/src/domains"
 
 	"github.com/gorilla/mux"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestPurchase(t *testing.T) {
+type test struct {
+	name                   string
+	userID                 string
+	testID                 string
+	mockGetProductById     func()
+	mockGetUserDepositById func()
+}
+
+func TestPurchaseProductInsufficiency(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/buy/1/14", nil)
+	r = mux.SetURLVars(r, map[string]string{"productId": "1", "quantity": "14"})
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	r.Header.Set("user_id", "seller-user-test")
-	m := mux.NewRouter()
-	m.HandleFunc("/buy/{productId}/{quantity}", Purchase)
-	m.ServeHTTP(w, r)
 
-	tests := []struct {
-		name               string
-		userID             string
-		mockGetProductById func()
-	}{
-		{
-			name:   "All success",
-			userID: "seller",
-			mockGetProductById: func() {
-				GetProductByID = func(id int) *domains.Product {
-					return &domains.Product{
-						ID:              1,
-						AmountAvailable: 10,
-						Cost:            200,
-						ProductName:     "Test Coffee",
-						SellerId:        "seller-user-test",
-					}
+	tempGetProductByID := GetProductByID
+
+	testPurchaseProductInsufficiency := &test{
+
+		name:   "Product Insufficiency Error Expected",
+		userID: "seller",
+		testID: "ProductInsufficiency",
+		mockGetProductById: func() {
+			GetProductByID = func(id int) *domains.Product {
+				return &domains.Product{
+					ID:              1,
+					AmountAvailable: 10,
+					Cost:            200,
+					ProductName:     "Test Coffee",
+					SellerId:        "seller-user-test",
 				}
-			},
+			}
 		},
 	}
 
-	for _, tc := range tests {
-		t.Run(tc.name, func(tt *testing.T) {
-			tc.mockGetProductById()
-			Purchase(w, r)
-		})
+	testPurchaseProductInsufficiency.mockGetProductById()
+	Purchase(w, r)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	GetProductByID = tempGetProductByID
+
+}
+
+func TestPurchaseProductNotFound(t *testing.T) {
+
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodPost, "/buy/1/14", nil)
+	r = mux.SetURLVars(r, map[string]string{"productId": "1", "quantity": "14"})
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	r.Header.Set("user_id", "seller-user-test")
+
+	tempGetProductByID := GetProductByID
+
+	testPurchaseProductNotFound := &test{
+
+		name:   "Product Insufficiency Error Expected",
+		userID: "seller",
+		testID: "ProductInsufficiency",
+		mockGetProductById: func() {
+			GetProductByID = func(id int) *domains.Product {
+				return nil
+			}
+		},
 	}
+
+	testPurchaseProductNotFound.mockGetProductById()
+	Purchase(w, r)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	GetProductByID = tempGetProductByID
+
+}
+
+func TestUserDepositNotFound(t *testing.T) {
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodPost, "/buy/1/14", nil)
+	r = mux.SetURLVars(r, map[string]string{"productId": "1", "quantity": "14"})
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	r.Header.Set("user_id", "seller-user-test")
+
+	tempGetProductByID := GetProductByID
+
+	testPurchaseUserDepositNotFound := &test{
+
+		name:   "Product Insufficiency Error Expected",
+		userID: "seller",
+		testID: "ProductInsufficiency",
+		mockGetProductById: func() {
+			GetProductByID = func(id int) *domains.Product {
+				return &domains.Product{
+					ID:              1,
+					AmountAvailable: 18,
+					Cost:            200,
+					ProductName:     "Test Coffee",
+					SellerId:        "seller-user-test",
+				}
+			}
+		},
+		mockGetUserDepositById: func() {
+			GetUserDepositByID = func(userId string) (*domains.UserDeposit, *config.HttpError) {
+				return nil, config.DataAccessLayerError("User Deposit Not Found")
+			}
+		},
+	}
+
+	testPurchaseUserDepositNotFound.mockGetProductById()
+	testPurchaseUserDepositNotFound.mockGetUserDepositById()
+	Purchase(w, r)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	GetProductByID = tempGetProductByID
 
 }

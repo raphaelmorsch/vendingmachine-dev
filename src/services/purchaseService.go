@@ -16,6 +16,9 @@ var (
 	GetProductByID = func(id int) *domains.Product {
 		return repositories.FindProductById(int(id))
 	}
+	GetUserDepositByID = func(userId string) (*domains.UserDeposit, *config.HttpError) {
+		return repositories.FindUserDeposit(userId)
+	}
 )
 
 func Purchase(w http.ResponseWriter, r *http.Request) {
@@ -52,12 +55,14 @@ func Purchase(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Product not found"))
 		json.NewEncoder(w).Encode(config.BadRequestError("Product not found"))
 
+		return
 	}
 
 	//check if there is Deposit enough available
-	deposit, errDeposit := repositories.FindUserDeposit(userId)
+	deposit, errDeposit := GetUserDepositByID(userId)
 	if errDeposit != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(errDeposit.Error)
