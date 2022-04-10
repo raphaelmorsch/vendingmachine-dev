@@ -1,0 +1,30 @@
+paths:
+  /admin/company/:
+    get:
+      description: Get companies list
+      operationId: listCompany
+      responses:
+        "200":
+          $ref: '#/responses/GetCompanies'
+        "401":
+          $ref: '#/responses/CommonError'
+      security:
+      - apiKey:
+        - '[]'
+      tags:
+      - admin
+  /user:
+    post:
+      description: Adds new user
+      operationId: addNewUser
+      responses:
+        "201":
+          $ref: '#/responses/UserCreated'
+        "401":
+          $ref: '#/responses/CommonError'
+      security:
+      - apiKey:
+        - '[]'
+      tags:
+      - user
+swagger: "2.0"
