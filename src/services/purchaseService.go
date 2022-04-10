@@ -9,7 +9,6 @@ import (
 	"vendingmachine/src/repositories"
 
 	"github.com/gorilla/mux"
-	"gorm.io/gorm"
 )
 
 var (
@@ -18,6 +17,9 @@ var (
 	}
 	GetUserDepositByID = func(userId string) (*domains.UserDeposit, *config.HttpError) {
 		return repositories.FindUserDeposit(userId)
+	}
+	RunFinishPurchase = func(product domains.Product, userId string) error {
+		return repositories.FinishPurchase(product, userId)
 	}
 )
 
@@ -92,23 +94,13 @@ func Purchase(w http.ResponseWriter, r *http.Request) {
 		purchase.Change = changeMap
 	}
 
-	config.Database.Transaction(func(tx *gorm.DB) error {
+	errFinish := RunFinishPurchase(*product, userId)
+	if errFinish != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(errFinish.Error())
 
-		_, errUpdProduct := repositories.UpdateProduct(product)
-		//Reset User's Deposits
-		errDelUD := repositories.DeleteUserDeposit(userId)
-
-		if errUpdProduct != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(config.DataAccessLayerError(errUpdProduct.Error))
-		} else {
-			if errDelUD != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				json.NewEncoder(w).Encode(config.DataAccessLayerError(errDelUD.Error))
-			}
-		}
-		return nil
-	})
+		return
+	}
 
 	//return Purchase json
 	w.WriteHeader(http.StatusOK)
