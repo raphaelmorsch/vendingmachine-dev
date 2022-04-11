@@ -22,3 +22,8 @@
             - Service Account **enabled**
             - Authorization **enabled**
             - Valid Redirect URIs: *
+            - Go to the Tab **Credentials** and copy the **Secret** value
+            - Create the env variable **SELLER_CLIENT_SECRET** ```export SELLER_CLIENT_SECRET=<<the-secret-you-copied-on-previous-step>>
+            - Create the env variable **SELLER_CLIENT_ID** ```export SELLER_CLIENT_ID=vendingmachine-app```
+        - On Keycloak, for this client, create 2 new Roles: **buyer** and **seller**
+        - On Keycloak, create an User called **vending-machine-admin**
