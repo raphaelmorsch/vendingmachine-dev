@@ -90,8 +90,7 @@ func Purchase(w http.ResponseWriter, r *http.Request) {
 
 	//check if there is any change and if so, split it into coins
 	if deposit.Balance > 0 {
-		changeMap := ReturnChange(deposit.Balance)
-		purchase.Change = changeMap
+		purchase.Change = ReturnChange(deposit.Balance)
 	}
 
 	errFinish := RunFinishPurchase(*product, userId)

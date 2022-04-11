@@ -32,6 +32,8 @@ var (
 	hostname = os.Getenv("CLOAK_HOST")
 
 	realmAdminUser = os.Getenv("REALM_ADMIN_USER")
+
+	realmAdminPassword = os.Getenv("REALM_ADMIN_PASSWORD")
 )
 
 var client gocloak.GoCloak
@@ -139,7 +141,7 @@ func isRoleAllowed(claims jwt.MapClaims, allowedRoles []string) bool {
 //  201: UserCreated
 func AddNewUser(w http.ResponseWriter, r *http.Request) {
 
-	token, err := client.LoginAdmin(r.Context(), realmAdminUser, "12345", realm)
+	token, err := client.LoginAdmin(r.Context(), realmAdminUser, realmAdminPassword, realm)
 
 	if err != nil {
 		w.WriteHeader(401)
