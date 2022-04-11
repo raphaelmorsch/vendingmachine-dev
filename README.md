@@ -38,3 +38,8 @@
         - Create the env variable CLOAK_HOST with the value http://localhost:8086 ```export CLOAK_HOST=http://localhost:8086```
         - Create the env variable REALM_ADMIN_USER with the value vending-machine-admin ```export REALM_ADMIN_USER=vending-machine-admin```
         - Create the env variable REALM_ADMIN_PASSWORD with the value "12345" ```export REALM_ADMIN_PASSWORD=12345```
+    - This previous steps should all be removed and the process would be all automated, once the Dockerfile it's done for the Docker Compose
+- **Missing Features**
+    - OpenAPI docs
+    - DockerCompose
+    - Not all API features are covered by Tests -> There is an ```purchaseService_test.go``` as an example of how Unit Tests will behave
