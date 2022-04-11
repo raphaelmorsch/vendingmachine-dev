@@ -39,7 +39,7 @@
         - Create the env variable REALM_ADMIN_USER with the value vending-machine-admin ```export REALM_ADMIN_USER=vending-machine-admin```
         - Create the env variable REALM_ADMIN_PASSWORD with the value "12345" ```export REALM_ADMIN_PASSWORD=12345```
     - This previous steps should all be removed and the process would be all automated, once the Dockerfile it's done for the Docker Compose
-- **Missing Features**
+- **Missing Features** (Unfortunately, due to a lack of time it was not possible to finish)
     - OpenAPI docs
     - DockerCompose
     - Not all API features are covered by Tests -> There is an ```purchaseService_test.go``` as an example of how Unit Tests will behave
