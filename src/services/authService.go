@@ -151,6 +151,10 @@ func AddNewUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	reqBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(err.Error())
+	}
 
 	var user gocloak.User
 
