@@ -36,4 +36,5 @@
             - Create a new User to act as a buyer. Name it as you want. On the **Role Mappings** tab, pick **vendingmachine-app** as **Client Role** and assign the **buyer** Role to it
         - Create the env variable REALM with the value vendingmachine ```export REALM=vendingmachine```
         - Create the env variable CLOAK_HOST with the value http://localhost:8086 ```export CLOAK_HOST=http://localhost:8086```
-        - 
+        - Create the env variable REALM_ADMIN_USER with the value vending-machine-admin ```export REALM_ADMIN_USER=vending-machine-admin```
+        - Create the env variable REALM_ADMIN_PASSWORD with the value "12345" ```export REALM_ADMIN_PASSWORD=12345```
