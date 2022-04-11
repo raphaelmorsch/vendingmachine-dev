@@ -13,4 +13,12 @@
 - **Environment customization**
     - So far, due to lack of time, it wasn't possible to provide a docker-compose to automate all the environment preparation automatically, so a few steps are necessary to make it running:
     - Create manually env variables: 
-        - 
+        - ```$ export SELLER_CLIENT_ID=vendingmachine-app```
+        - Login to Keycloak as admin:admin and create a realm called **vendingmachine**
+        - Create on Keycloak an Client called ```vendingmachine-app```
+            - Access Type **confidential**
+            - Standard Flow **enabled**
+            - Direct Access Granted **enabled**
+            - Service Account **enabled**
+            - Authorization **enabled**
+            - Valid Redirect URIs: *
