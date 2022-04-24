@@ -7,7 +7,7 @@ require (
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/go-openapi/runtime v0.23.3
 	github.com/gorilla/mux v1.8.0
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.1
 	github.com/xgfone/cast v0.5.1
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.4

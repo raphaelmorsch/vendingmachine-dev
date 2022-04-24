@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: docker.io/library/mysql:latest
+    container_name: vendingmachine-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'r00t'
+      MYSQL_DATABASE: 'vending_machine_db'
+    ports:
+      - '3307:3307'
+    expose:
+      - '3307'
+    volumes:
+      - my-db:/var/lib/mysql
+  keycloak:
+    image: docker.io/jboss/keycloak:latest
+    container_name: vendingmachine-keycloak
+    ports:
+      - "5080:8080"
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+  vending-machine:
+    build: .
+    container_name: vendingmachine-rest-api
+    environment:
+      SELLER_CLIENT_ID: 'vendingmachine-app'
+      SELLER_CLIENT_SECRET: 'to-be-informed-after-creating-vending-machine-app-client-on-keycloak'
+      REALM: 'vendingmachine'
+      CLOAK_HOST: 'http://localhost:5080'
+      REALM_ADMIN_USER: 'vending-machine-admin'
+      REALM_ADMIN_PASSWORD: '12345'
+    ports:
+      - '8099:8083'
+    depends_on:
+      - mysql
+      - keycloak
+
+volumes:
+  my-db:
