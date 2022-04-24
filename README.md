@@ -12,6 +12,7 @@
     - Using docker.io/jboss/keycloak:latest image to run Keycloak instance (listening on port 8086)
     - Using podman to create the pod with all dependant containers
     - vending-machine:latest container is available at quay.io repository
+    - Check Dockerfile, pods.sh and restart.sh for more information
 - **Environment customization**
     - So far, due to lack of time, it wasn't possible to provide a docker-compose to automate all the environment preparation automatically, so a few steps are necessary to make it running:
     - Create manually env variables: 
