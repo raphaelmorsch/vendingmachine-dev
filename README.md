@@ -19,3 +19,4 @@
     - This steps can be done on keycloak UI or with the endpoint POST /user
 - **Missing Features** (Unfortunately, due to a lack of time it was not possible to finish)
     - OpenAPI docs
+    - Deep Refactoring
